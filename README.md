@@ -20,7 +20,7 @@ than a single stock.
 |---|---|
 | `app_v2.py` | The Streamlit web app |
 | `train_model.py` | Script that trains the multi-ticker LSTM model |
-| `Stock_Predictions_Model_v2.keras` | Pre-trained model — do not rename without updating `app_v2.py` |
+| `Stock_Predictions_Model_v2.keras` | Pre-trained model |
 | `requirements.txt` | Python dependencies needed to run/deploy the app |
 
 ## How it works
@@ -52,14 +52,9 @@ than a single stock.
 
 ### Generalization - the core v2 upgrade
 - **Replaced global min-max scaling with per-window normalization.** The v1 model was scaled using one stock's absolute price range, so it only ever "understood" prices in that narrow band - meaningless for a stock at a very different price level. Each 100-day window is now scaled by its own min/max, so the model learns the *shape* of price movement rather than an absolute price level.
-- **Retrained across ~30 tickers** spanning tech, financials, healthcare, energy, consumer staples, media, and industrials - instead of a single stock - so the model has actually seen a range of price behaviors, not just one company's history.
 - **Added RMSE and MAPE metrics** on the backtest, so accuracy is quantified rather than just visual.
 - **Added a real next-day forecast** (last close → predicted close → % change) instead of only a historical backtest chart.
 - **Added `train_model.py`** as a reproducible, documented retraining script.
-
-### Deployment
-- **Added `requirements.txt`** — the repo previously had no dependency file, which blocks any Streamlit Cloud deployment outright.
-- **Fixed a Python-version/TensorFlow wheel mismatch** on Streamlit Community Cloud by pinning the Python version and using the `tensorflow` package instead of the increasingly unsupported `tensorflow-cpu`.
 
 
 ## Business value
@@ -76,12 +71,6 @@ Use to quickly gauge trend direction and get a data-driven reference point - not
 `train_model.py` downloads ~14 years of daily data across ~30 tickers and
 retrains the model from scratch using per-window normalization.
 
-```bash
-pip install yfinance tensorflow scikit-learn pandas numpy
-python train_model.py
-```
-
-This produces a new `Stock_Predictions_Model_v2.keras` 
 
 ## Known limitations
 
