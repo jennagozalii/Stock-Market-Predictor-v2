@@ -25,45 +25,31 @@ than a single stock.
 
 ## How it works
 
-1. **Data** — pulls daily historical closing prices for a chosen ticker
+1. **Data** - pulls daily historical closing prices for a chosen ticker
    from Yahoo Finance (`yfinance`).
-2. **Normalization** — instead of scaling by one global price range (which
+2. **Normalization** - instead of scaling by one global price range (which
    breaks down across tickers with very different price levels), each
    100-day input window is scaled by its **own** min/max. This lets the
    model learn the *shape* of price movement rather than an absolute price
    level, which is what makes it usable across many different stocks.
-3. **Model** — a stacked LSTM (4 layers, with dropout) trained across ~30
+3. **Model** - a stacked LSTM (4 layers, with dropout) trained across ~30
    tickers spanning different sectors and price ranges, using the
    per-window scaling above.
-4. **Prediction** — the app shows a historical backtest (predicted vs.
+4. **Prediction** - the app shows a historical backtest (predicted vs.
    actual on a held-out test split) plus a live next-day price prediction
    for whatever ticker you enter.
-
-## Run it locally
-
-```bash
-git clone https://github.com/jennagozalii/Stock-Market-Predictor-v2.git
-cd Stock-Market-Predictor-v2
-pip install -r requirements.txt
-streamlit run app_v2.py
-```
-
-Then open the URL Streamlit prints (usually `http://localhost:8501`).
 
 ## Retraining the model
 
 `train_model.py` downloads ~14 years of daily data across ~30 tickers and
-retrains the model from scratch using per-window normalization. This needs
-real compute time and internet access to Yahoo Finance, so it's best run in
-**Google Colab**
+retrains the model from scratch using per-window normalization.
 
 ```bash
 pip install yfinance tensorflow scikit-learn pandas numpy
 python train_model.py
 ```
 
-This produces a new `Stock_Predictions_Model_v2.keras` — swap it into the
-repo to update the deployed app.
+This produces a new `Stock_Predictions_Model_v2.keras` 
 
 ## Known limitations
 
