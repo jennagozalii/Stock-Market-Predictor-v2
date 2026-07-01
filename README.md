@@ -39,6 +39,38 @@ than a single stock.
    actual on a held-out test split) plus a live next-day price prediction
    for whatever ticker you enter.
 
+## Improvements from v1 → v2
+
+### Bug fixes
+- **Fixed a data-leakage bug** - the original scaler was re-fit (`fit_transform`) on the test set instead of only the training set, letting test-set statistics leak into scaling and quietly inflating apparent accuracy. Now fit once on train, `.transform()` only elsewhere.
+- **Fixed a memory leak** - matplotlib figures weren't being closed after rendering, which builds up over time on a long-running deployed app. Added `plt.close(fig)` after every chart.
+- **Fixed stale data** - the end date was hardcoded to a fixed past date instead of pulling up to the current day.
+- **Fixed missing error handling** - an invalid ticker symbol used to crash the app; now shows a clear message instead.
+
+### Performance
+- **Added caching** (`@st.cache_data`, `@st.cache_resource`) so the model and Yahoo Finance data aren't re-downloaded/re-loaded on every single widget interaction.
+
+### Generalization - the core v2 upgrade
+- **Replaced global min-max scaling with per-window normalization.** The v1 model was scaled using one stock's absolute price range, so it only ever "understood" prices in that narrow band - meaningless for a stock at a very different price level. Each 100-day window is now scaled by its own min/max, so the model learns the *shape* of price movement rather than an absolute price level.
+- **Retrained across ~30 tickers** spanning tech, financials, healthcare, energy, consumer staples, media, and industrials - instead of a single stock - so the model has actually seen a range of price behaviors, not just one company's history.
+- **Added RMSE and MAPE metrics** on the backtest, so accuracy is quantified rather than just visual.
+- **Added a real next-day forecast** (last close → predicted close → % change) instead of only a historical backtest chart.
+- **Added `train_model.py`** as a reproducible, documented retraining script.
+
+### Deployment
+- **Added `requirements.txt`** — the repo previously had no dependency file, which blocks any Streamlit Cloud deployment outright.
+- **Fixed a Python-version/TensorFlow wheel mismatch** on Streamlit Community Cloud by pinning the Python version and using the `tensorflow` package instead of the increasingly unsupported `tensorflow-cpu`.
+
+
+## Business value
+
+Use to quickly gauge trend direction and get a data-driven reference point - not as a standalone basis for investment decisions.
+
+- **Trend at a glance (moving averages).** Daily prices are noisy; the MA50/MA100/MA200 lines smooth that out so a stakeholder can immediately see "this stock has been climbing for months" or "this one's been sliding," without reading raw data.
+- **A directional forecast, clearly labeled as such.** The next-day prediction gives a concrete number to react to - but the app is explicit that it's based only on price history, not news, earnings, or fundamentals, so it's a talking point and sanity check, not a trading signal.
+- **A visible accuracy check (RMSE/MAPE).** The backtest shows exactly how close past predictions were to actual prices - so anyone using it can calibrate how much weight to give it.
+
+
 ## Retraining the model
 
 `train_model.py` downloads ~14 years of daily data across ~30 tickers and
