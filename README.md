@@ -55,12 +55,12 @@ This produces a new `Stock_Predictions_Model_v2.keras`
 
 - Trained on a single feature (closing price only) - no volume, technical
   indicators, or macro/news signals.
-- Not a reliable trading signal on its own — markets are influenced by
+- Not a reliable trading signal on its own - markets are influenced by
   information (news, earnings, sentiment) the model never sees.
 - Very new tickers (recent IPOs) or highly illiquid/volatile stocks may fall
   outside the price behavior the training basket covered, so predictions
   there should be trusted even less than usual.
-- No walk-forward validation or hyperparameter tuning was performed — a
+- No walk-forward validation or hyperparameter tuning was performed - a
   single chronological 80/20 split per ticker was used.
 
 ## Tech stack
