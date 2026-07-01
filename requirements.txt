@@ -3,5 +3,5 @@ pandas
 numpy
 yfinance
 matplotlib
-tensorflow-cpu
+tensorflow
 keras
