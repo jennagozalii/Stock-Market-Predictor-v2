@@ -12,7 +12,7 @@ than a single stock.
 
 ## Live demo
 
-🔗 _[Streamlit link]_
+🔗 https://stock-market-predictor-v2.streamlit.app/ 
 
 ## What's in this repo
 
