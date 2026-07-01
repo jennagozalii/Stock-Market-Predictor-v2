@@ -29,7 +29,7 @@ st.markdown(
 )
 
 st.warning(
-    "⚠️This model is trained purely on historical closing prices with no knowledge "
+    "This model is trained purely on historical closing prices with no knowledge "
     "of news, earnings, or market sentiment. Treat predictions as a talking point, "
     "not a signal to trade on.",
     icon="⚠️",
